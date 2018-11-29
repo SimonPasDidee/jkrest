@@ -21,16 +21,16 @@ namespace RestClientJenkins
 
         public string GetSecurityCrumb()
         {
-            string uri = $"{Url}/crumbIssuer/api/xml";
-            var client = new RestClient(uri);
+            string uri = $"{Url}/crumbIssuer/api/xml";// URL where the XML is available
+            var client = new RestClient(uri); // define it as the actual client
             var request = new RestRequest(Method.GET);
-            byte[] ua = Encoding.ASCII.GetBytes(Username + ":" + ApiToken);
+            byte[] ua = Encoding.ASCII.GetBytes(Username + ":" + ApiToken); // Encoding username and token in base 64
 
-            request.AddHeader("authorization", "Basic " + Convert.ToBase64String(ua));
+            request.AddHeader("authorization", "Basic " + Convert.ToBase64String(ua));// adding header to get the xml
             IRestResponse response = client.Execute(request);
-            var document = XDocument.Parse(response.Content);
+            var document = XDocument.Parse(response.Content);// parsing the content of the response in a document
 
-            var crumb = document.Root.Element("crumb").Value;
+            var crumb = document.Root.Element("crumb").Value;// retrieve the content of the crumb only
 
             return crumb;
         }
