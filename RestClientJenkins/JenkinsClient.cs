@@ -76,6 +76,51 @@ namespace RestClientJenkins
 
             IRestResponse response = client.Execute(request);
         }
+
+        public void AbortBuild(string jobName,string buildId)
+        {
+            string uri = $"{Url}/job/{jobName}/{buildId}/stop";
+            var client = new RestClient(uri);
+            var request = new RestRequest(Method.POST);
+            byte[] ua = Encoding.ASCII.GetBytes(Username + ":" + ApiToken);
+
+            request.AddHeader("authorization", "Basic " + Convert.ToBase64String(ua));
+            request.AddHeader("Jenkins-Crumb", GetSecurityCrumb());
+
+            IRestResponse response = client.Execute(request);
+        }
+
+        //To revise
+        public void ResumePausedPipeline(string jobName,string buildId,string inputId)
+        {
+            string uri = $"{Url}/job/{jobName}/{buildId}/wfapi/inputSubmit";
+            var client = new RestClient(uri);
+            var request = new RestRequest(Method.POST);
+            byte[] ua = Encoding.ASCII.GetBytes(Username + ":" + ApiToken);
+
+            request.AddParameter("inputId", inputId);
+
+            request.AddHeader("authorization", "Basic " + Convert.ToBase64String(ua));
+            request.AddHeader("Jenkins-Crumb", GetSecurityCrumb());
+
+            IRestResponse response = client.Execute(request);
+        }
+
+        //To revise - maybe not
+        public void AbortPausedPipeline(string jobName, string buildId, string inputId)
+        {
+            string uri = $"{Url}/job/{jobName}/{buildId}/input/{inputId}/abort";
+            var client = new RestClient(uri);
+            var request = new RestRequest(Method.POST);
+            byte[] ua = Encoding.ASCII.GetBytes(Username + ":" + ApiToken);
+
+            request.AddHeader("authorization", "Basic " + Convert.ToBase64String(ua));
+            request.AddHeader("Jenkins-Crumb", GetSecurityCrumb());
+
+            IRestResponse response = client.Execute(request);
+        }
+
+
     }
 
 }
