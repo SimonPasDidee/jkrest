@@ -118,9 +118,56 @@ namespace RestClientJenkins
             request.AddHeader("Jenkins-Crumb", GetSecurityCrumb());
 
             IRestResponse response = client.Execute(request);
+
         }
 
+        //To implement
+        public void BuildJobWithParameters()
+        {
 
+        }
+
+        //To implement
+        public void GetPipelinesList()
+        {
+
+        }
+
+        //To implement
+        public void GetPipelineRuns(string jobName)
+        {
+
+        }
+
+        //To implement
+        public string GetBuildLog(string jobName,string buildId)
+        {
+            string uri = $"{Url}/blue/rest/organizations/jenkins/pipelines/{jobName}/runs/{buildId}/log";
+            var client = new RestClient(uri);
+            var request = new RestRequest(Method.GET);
+            byte[] ua = Encoding.ASCII.GetBytes(Username + ":" + ApiToken);
+
+            request.AddHeader("authorization", "Basic " + Convert.ToBase64String(ua));
+            //request.AddHeader("Jenkins-Crumb", GetSecurityCrumb());
+
+            IRestResponse response = client.Execute(request);
+
+            return response.Content;
+        }
+
+        public string Test()
+        {
+            var client = new RestClient("http://localhost:8080/blue/rest/organizations/jenkins/pipelines/test2/runs/25/log");
+            var request = new RestRequest(Method.GET);
+
+            //request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Content-Type", "application/json");
+
+            request.AddHeader("Authorization", "Basic c2ltb246MTFlOWFkNDE2NjI3MWUzYzRkNDMwNmE4MmFkZWNmNmM5NA==");
+            IRestResponse response = client.Execute(request);
+
+            return response.Content;
+        }
     }
 
 }
