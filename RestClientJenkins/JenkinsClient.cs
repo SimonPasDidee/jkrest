@@ -77,6 +77,7 @@ namespace RestClientJenkins
             IRestResponse response = client.Execute(request);
         }
 
+        //To revise
         public void AbortBuild(string jobName,string buildId)
         {
             string uri = $"{Url}/job/{jobName}/{buildId}/stop";
@@ -106,7 +107,7 @@ namespace RestClientJenkins
             IRestResponse response = client.Execute(request);
         }
 
-        //To revise - maybe not
+        //To revise
         public void AbortPausedPipeline(string jobName, string buildId, string inputId)
         {
             string uri = $"{Url}/job/{jobName}/{buildId}/input/{inputId}/abort";
@@ -139,35 +140,23 @@ namespace RestClientJenkins
 
         }
 
-        //To implement
         public string GetBuildLog(string jobName,string buildId)
         {
-            string uri = $"{Url}/blue/rest/organizations/jenkins/pipelines/{jobName}/runs/{buildId}/log";
+            string uri = $"{Url}/job/{jobName}/{buildId}/logText/progressiveText";
+            Console.WriteLine(uri);
             var client = new RestClient(uri);
             var request = new RestRequest(Method.GET);
             byte[] ua = Encoding.ASCII.GetBytes(Username + ":" + ApiToken);
 
-            request.AddHeader("authorization", "Basic " + Convert.ToBase64String(ua));
-            //request.AddHeader("Jenkins-Crumb", GetSecurityCrumb());
+            request.AddHeader("Authorization", "Basic " + Convert.ToBase64String(ua));
+
+            request.AddParameter("start", "0");
 
             IRestResponse response = client.Execute(request);
 
             return response.Content;
         }
 
-        public string Test()
-        {
-            var client = new RestClient("http://localhost:8080/blue/rest/organizations/jenkins/pipelines/test2/runs/25/log");
-            var request = new RestRequest(Method.GET);
-
-            //request.AddHeader("cache-control", "no-cache");
-            request.AddHeader("Content-Type", "application/json");
-
-            request.AddHeader("Authorization", "Basic c2ltb246MTFlOWFkNDE2NjI3MWUzYzRkNDMwNmE4MmFkZWNmNmM5NA==");
-            IRestResponse response = client.Execute(request);
-
-            return response.Content;
-        }
     }
 
 }
